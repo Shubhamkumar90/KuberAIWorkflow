@@ -60,7 +60,7 @@ def buyingGold():
         if not user_id or not amount_inr:
             return jsonify({"error": "user_id and amount_inr are required","success":"False"}), 400
         if float(amount_inr) < 10:
-                return jsonify({"error": "Minimum investment amount is ₹10","success":"False"}), 400
+                return jsonify({"error": "Minimum investment amount is 10 rupee","success":"False"}), 400
         gold_grams = float(amount_inr) / CURRENT_GOLD_PRICE_PER_GRAM
         transaction_id = f"TXN_{uuid.uuid4().hex[:10].upper()}"
         existing_user = Users.query.filter_by(user_id=user_id).first()
@@ -76,7 +76,7 @@ def buyingGold():
         db.session.add(new_purchase)
         db.session.commit()
         total_holdings = db.session.query(db.func.sum(GoldPurchase.gold_grams).label('total_gold'),db.func.sum(GoldPurchase.amount_inr).label('total_invested')).filter(GoldPurchase.user_id == user_id,GoldPurchase.status == 'completed').first()
-        
+
         return jsonify({
             "message": "Gold purchase successful!",
             "transaction_details": {
